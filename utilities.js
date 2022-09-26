@@ -92,29 +92,29 @@ exports.decomposePath = (url) => {
     return { isAPI, model, controllerName, action, id, queryString, params };
 }
 
-/////////////////////////////////////////////////////////////////////
-//Méthodes Annexes de Labo 2
-/////////////////////////////////////////////////////////////////////
-exports.valueMatch = valueMatch;
-function valueMatch(value, searchValue) {
-    try {
-        return new RegExp('^' + searchValue.toLowerCase().replace(/\*/g, '.*') + '$').test(value.toString().toLowerCase());
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
-}
-exports.compareNum = compareNum;
-function compareNum(x, y, order) {
-    if (x === y) return 0;
-    else if (x < y) return -1 * order;
-    return 1 * order;
-}
-exports.innerCompare = innerCompare;
-function innerCompare(x, y, asc) {
-    let order = asc ? 1 : -1;
-    if ((typeof x) === 'string')
-        return x.localeCompare(y) * order;
-    else
-        return this.compareNum(x, y, order);
-}
+// /////////////////////////////////////////////////////////////////////
+// //Méthodes Annexes de Labo 2
+// /////////////////////////////////////////////////////////////////////
+// exports.valueMatch = valueMatch;
+// function valueMatch(value, searchValue) {
+//     try {
+//         return new RegExp('^' + searchValue.toLowerCase().replace(/\*/g, '.*') + '$').test(value.toString().toLowerCase());
+//     } catch (error) {
+//         console.log(error);
+//         return false;
+//     }
+// }
+// exports.compareNum = compareNum;
+// function compareNum(x, y, order) {
+//     if (x === y) return 0;
+//     else if (x < y) return -1 * order;
+//     return 1 * order;
+// }
+// exports.innerCompare = innerCompare;
+// function innerCompare(x, y, asc) {
+//     let order = asc ? 1 : -1;
+//     if ((typeof x) === 'string')
+//         return x.localeCompare(y) * order;
+//     else
+//         return this.compareNum(x, y, order);
+// }

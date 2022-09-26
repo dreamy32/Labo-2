@@ -152,14 +152,12 @@ class Repository {
                 }
             });
             // todo filter
+            let filteredObjects = objectsList;
+            searchKeys.forEach((searchKey) => {
+                filteredObjects = filteredObjects.filter((i) => this.valueMatch(i[searchKey.key], searchKey.value));
+            });
             // todo sort
-            const keyStrings = ["Title", "Category", "Url"];
-            if (Array.isArray(sortKeys)) {
-                if (sortKeys[0].key === 'Id')
-                    filteredAndSortedObjects = objectsList.sort((a, b) => utilities.innerCompare(a.Id, b.Id, sortKeys[0].asc));
-                else if (keyStrings.some(keyString => sortKeys[0].key === keyString))
-                    filteredAndSortedObjects = objectsList.sort((a, b) => utilities.innerCompare(a[sortKeys[0].key], b[sortKeys[0].key], sortKeys[0].asc));
-            }
+            filteredAndSortedObjects = this.sortObjectList(filteredObjects, sortKeys);
             return filteredAndSortedObjects;
         }
         return objectsList;
@@ -197,6 +195,48 @@ class Repository {
             }
         }
         return null;
+    }
+    compareNum(x, y) {
+        if (x === y) return 0;
+        else if (x < y) return -1;
+        return 1;
+    }
+    innerCompare(x, y) {
+        if ((typeof x) === 'string')
+            return x.localeCompare(y);
+        else
+            return this.compareNum(x, y);
+    }
+    compare(itemX, itemY) {
+        let fieldIndex = 0;
+        let max = this.sortFields.length;
+        do {
+            let result = 0;
+            if (this.sortFields[fieldIndex].asc)
+                result = this.innerCompare(itemX[this.sortFields[fieldIndex].key], itemY[this.sortFields[fieldIndex].key]);
+            else
+                result = this.innerCompare(itemY[this.sortFields[fieldIndex].key], itemX[this.sortFields[fieldIndex].key]);
+            if (result == 0)
+                fieldIndex++;
+            else
+                return result;
+        } while (fieldIndex < max);
+        return 0;
+    }
+    valueMatch(value, searchValue) {
+        try {
+            return new RegExp('^' + searchValue.toLowerCase().replace(/\*/g, '.*') + '$').test(value.toString().toLowerCase());
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
+    sortObjectList(objectsList, sortKeys) {
+        this.sortFields = sortKeys;
+        let objectListSorted = [...objectsList].sort((a, b) => {
+            return this.compare(a, b);
+        });
+        return objectListSorted;
     }
 }
 
