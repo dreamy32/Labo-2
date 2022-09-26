@@ -130,6 +130,7 @@ class Repository {
             let filteredAndSortedObjects = [];
             // TODO Laboratoire 2
             let sortKeys = [];
+            this.sortFields = sortKeys;
             let searchKeys = [];
             Object.keys(params).forEach(function (paramName) {
                 if (paramName == "sort") {
@@ -154,10 +155,12 @@ class Repository {
             // todo filter
             let filteredObjects = objectsList;
             searchKeys.forEach((searchKey) => {
-                filteredObjects = filteredObjects.filter((i) => this.valueMatch(i[searchKey.key], searchKey.value));
+                filteredObjects = filteredObjects.filter(
+                    (i) => this.valueMatch(i[searchKey.key], searchKey.value)
+                );
             });
             // todo sort
-            filteredAndSortedObjects = this.sortObjectList(filteredObjects, sortKeys);
+            filteredAndSortedObjects = [...filteredObjects].sort((a, b) => this.compare(a, b));
             return filteredAndSortedObjects;
         }
         return objectsList;
@@ -230,13 +233,6 @@ class Repository {
             console.log(error);
             return false;
         }
-    }
-    sortObjectList(objectsList, sortKeys) {
-        this.sortFields = sortKeys;
-        let objectListSorted = [...objectsList].sort((a, b) => {
-            return this.compare(a, b);
-        });
-        return objectListSorted;
     }
 }
 
